@@ -1,12 +1,18 @@
+const body = $('body')
 const usersURL = 'https://randomuser.me/api/?results=12' 
 const galleryDiv = $('.gallery')
-// const cardDiv = document.createElement('div');
-// const cardImageDiv = document.createElement('div');
-// const cardInfoDiv = document.createElement('div');
+const modalDivContainter = document.createElement('div');
+// const modalDiv = document.createElement('div');
+// const modalInfoDiv = document.createElement('div');
+// const modalCloseBtn = document.createElement('button');
 
-// cardDiv.class = 'card';
-// cardImageDiv.class = 'card-img-container';
-// cardInfoDiv.class = 'card-info-container';
+modalDivContainter.class = 'modal-container';
+// modalDiv.class = 'modal';
+// modalInfoDiv.class = 'modal-info-container';
+// modalCloseBtn.type = 'button';
+// modalCloseBtn.class = 'modal-close-btn';
+// modalCloseBtn.id = 'modal-close-btn';
+// modalCloseBtn.innerHTML = '<strong>X</strong>'
 
 
 function fetchData(url) {
@@ -48,12 +54,10 @@ function generateUser(data) {
       </div>
     </div>
   `).join('');
-    console.log(users);
-    galleryDiv.append(users);
+
+  galleryDiv.append(users);
+  console.log(data);
 }
-
-
-
 
 /*Create a modal window
   When any part of an employee item in the directory is clicked, a modal window should pop up with the following details displayed:
@@ -66,6 +70,32 @@ function generateUser(data) {
     Birthday
 Make sure there’s a way to close the modal window
 Refer to the mockups and the comments in the index.html file for an example of what info should be displayed on the page and how it should be styled.*/
+
+galleryDiv.on('click', function(e) {
+  console.log(e.target.firstElementChild.firstElementChild.src);
+  const userModal = `
+    <div class="modal">
+      <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+      <div class="modal-info-container">
+          <img class="modal-img" src=${e.target.firstElementChild.firstElementChild.src} alt="profile picture">
+          <h3 id="name" class="modal-name cap">${user.name.first} ${user.name.last} </h3>
+          <p class="modal-text">${user.email}</p>
+          <p class="modal-text cap">${user.location.city}</p>
+          <hr>
+          <p class="modal-text">${user.cell}</p>
+          <p class="modal-text">${user.street} ${user.city} ${user.state} ${user.postcode}</p>
+          <p class="modal-text">Birthday: ${user.dob.date}</p>
+      </div>
+  </div>
+  `
+
+  modalDivContainter.append(userModal);
+
+  console.log(e.target);
+
+
+})
+
 
 
 
