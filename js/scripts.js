@@ -2,8 +2,6 @@ const body = $('body')
 const usersURL = 'https://randomuser.me/api/?results=12' 
 const galleryDiv = $('.gallery')
 var usersArray;
-// galleryDiv.append(modalDivContainter);
-// body.prepend(modalDivContainter);
 
 
 function fetchData(url) {
@@ -46,29 +44,14 @@ function generateUser(data) {
     </div>
   `).join('');
 
-
   galleryDiv.append(users);
 }
 
 
-
 galleryDiv.on('click', function(e) {
-  console.log('hey', usersArray);
-
-  console.log(e.target.attributes);
-
-  var user = e.target.attributes.usernum.value || '';
-
-  var picture = usersArray[user].picture.large
-  var first = usersArray[user].name.first;
-  var last = usersArray[user].name.last;
-  var email = usersArray[user].email;
-  var phone = usersArray[user].phone;
-  var street = usersArray[user].location.street;
-  var city = usersArray[user].location.city;
-  var state = usersArray[user].location.state;
-  var zip = usersArray[user].location.postcode;
-  var dob = usersArray[user].dob;
+  var userIndex = e.target.attributes.usernum.value || '';
+  var user = usersArray[userIndex]
+  var dateArray = user.dob.date.split('T')[0].split('-');
 
   if (user != '') {
     var userModal = `
@@ -76,27 +59,30 @@ galleryDiv.on('click', function(e) {
         <div class="modal">
           <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
           <div class="modal-info-container">
-              <img class="modal-img" src=${picture} alt="profile picture">
-              <h3 id="name" class="modal-name cap">${first} ${last}</h3>
-              <p class="modal-text">${email}</p>
-              <p class="modal-text cap">${city}</p>
+              <img class="modal-img" src=${user.picture.large} alt="profile picture">
+              <h3 id="name" class="modal-name cap">${user.name.first} ${user.name.last}</h3>
+              <p class="modal-text">${user.email}</p>
+              <p class="modal-text cap">${user.location.city}</p>
               <hr>
-              <p class="modal-text">${phone}</p>
-              <p class="modal-text">${street} ${city}, ${state} ${zip}</p>
-              <p class="modal-text">Birthday: ${dob}</p>
+              <p class="modal-text">${user.phone}</p>
+              <p class="modal-text">${user.location.street} ${user.location.city}, ${user.location.state} ${user.location.postcode}</p>
+              <p class="modal-text">Birthday: ${dateArray[1]}/${dateArray[2]}/${dateArray[0]}</p>
           </div>
         </div>
       </div>
     `
-
-    body.append($(userModal))
+    $(userModal).insertAfter($('#gallery'))
   }
 
-
+  modalClose();
 })
 
 
-
+const modalClose = () => {
+  $( "#modal-close-btn" ).click(function() {
+    $('.modal-container').hide()
+  });
+}
 
 
 
