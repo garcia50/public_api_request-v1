@@ -1,9 +1,9 @@
-const body = $('body')
+//Set variables
 const usersURL = 'https://randomuser.me/api/?results=12' 
 const galleryDiv = $('.gallery')
 var usersArray;
 
-
+//Make network requests and handle responses
 function fetchData(url) {
   return fetch(url)
           .then(checkStatus)
@@ -11,25 +11,27 @@ function fetchData(url) {
           .catch(error => console.log('Something is wrong', error))
 }
 
-
+//Returns our api object response and feeds the data into a variable for further manipulation
 Promise.all([
   fetchData(usersURL)
 ])
+//Following the retrieval of data (usersArray), the data is then passed through the generateUser function 
 .then(data => {
   usersArray = data[0].results;
   generateUser(usersArray);
 })
 
-
+//Check status of the request and converts object into json (reading friendly)
 function checkStatus(response) {
   if (response.ok) {
     return Promise.resolve(response);
   } else {
+//Outpost an error message if an error occurs
     return Promise.reject(new Error(response.statusText));
   }
 }
 
-
+//Create html with all individual user data
 function generateUser(data) {
   const users = data.map((user, index) => `
     <div class="card" usernum="${index}">
@@ -43,16 +45,21 @@ function generateUser(data) {
       </div>
     </div>
   `).join('');
-
+//Add html to galleryDiv
   galleryDiv.append(users);
 }
 
-
+//Create html with single individual user data
+//Set listeners to galleryDiv 
 galleryDiv.on('click', function(e) {
+  //Retrieve User index position
   var userIndex = e.target.attributes.usernum.value || '';
+  //Find particular user and set to a variable
   var user = usersArray[userIndex]
+  //Refactor date object to return appropiate data
   var dateArray = user.dob.date.split('T')[0].split('-');
 
+  //Create html if user is clicked on
   if (user != '') {
     var userModal = `
       <div class="modal-container">
@@ -71,19 +78,17 @@ galleryDiv.on('click', function(e) {
         </div>
       </div>
     `
+    //Insert html after userModal div
     $(userModal).insertAfter($('#gallery'))
   }
-
+  //Calls modalClose function to invoke the closing of the modal feature
   modalClose();
 })
 
-
+//Add listener to modal and checks if user clicks the 'X' button
 const modalClose = () => {
   $( "#modal-close-btn" ).click(function() {
+    //Hide div once 'X' button is clicked
     $('.modal-container').hide()
   });
 }
-
-
-
-
